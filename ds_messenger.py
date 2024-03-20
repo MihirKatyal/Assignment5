@@ -19,3 +19,13 @@ class DirectMessenger:
         # Authenticate with the server
         response = pip._vendor.requests.post(f'http://{self.dsuserver}/join', data=join(self.username, self.password))
         self.token = response.json()['token']
+
+    def send(self, message: str, recipient: str) -> bool:
+        # Send a message
+        if self.token is None:
+            if not self.authenticate():
+                return False
+        json_message = directmessage_send(self.token, message, recipient)
+        response = pip._vendor.requests.post(f'http://{self.dsuserver}/send', data=json_message)
+        data = extract_msg(response.text)
+        return data.type == 'ok'
