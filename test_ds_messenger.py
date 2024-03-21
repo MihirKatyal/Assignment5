@@ -2,16 +2,16 @@ import time
 from ds_messenger import DirectMessenger
 
 # Configuration for testing
-DSUSERVER = "ics32distributedsocial.com"  # Updated to correct server
+DSUSERVER = "168.235.86.101"  # Use the IP address of the server
 TEST_USERNAME = "f21demo"
 TEST_PASSWORD = "pwd123"
-RECIPIENT_USERNAME = "recipient_username"  # Make sure this is a valid username on the server
+RECIPIENT_USERNAME = "recipient_username"  # Ensure this is a valid username on the server
 
 def test_send_message(messenger):
     print("Testing Sending Message...")
-    message = "This is a test message."
+    message = "This is a test message from test_ds_messenger.py."
     recipient = RECIPIENT_USERNAME
-    success = messenger.send(message, recipient)  # Updated to match the method name in ds_messenger.py
+    success = messenger.send(message, recipient)
     assert success, "Failed to send message."
     print("Message sent successfully.")
 
@@ -28,7 +28,10 @@ def test_retrieve_all(messenger):
     print(f"Retrieved {len(all_messages)} total messages.")
 
 def main():
+    print("Initializing Direct Messenger...")
     messenger = DirectMessenger(dsuserver=DSUSERVER, username=TEST_USERNAME, password=TEST_PASSWORD)
+    
+    print("Authenticating...")
     if messenger.authenticate():
         print("Authenticated successfully.")
         test_send_message(messenger)
