@@ -70,8 +70,8 @@ class Body(tk.Frame):
 
         self.posts_tree = ttk.Treeview(posts_frame)
         self.posts_tree.bind("<<TreeviewSelect>>", self.node_select)
-        self.posts_tree.tag_configure('oddrow', background='cyan')
-        self.posts_tree.tag_configure('evenrow', background='magenta')
+        self.posts_tree.tag_configure('oddrow', background='white')
+        self.posts_tree.tag_configure('evenrow', background='blue')
         self.posts_tree.pack(fill=tk.BOTH, side=tk.TOP,
                              expand=True, padx=5, pady=5)
 
@@ -265,7 +265,7 @@ class MainApp(tk.Frame):
             if self.notonline_label is None:
                 self.notonline_label = tk.Label(self.root, width=200,
                                                 text="not online",
-                                                background="black",
+                                                background="blue",
                                                 foreground="white")
                 self.notonline_label.pack()
             if self.username and self.password:
@@ -473,7 +473,7 @@ class MainApp(tk.Frame):
             if self.notonline_label is None:
                 self.notonline_label = tk.Label(self.root, width=200,
                                                 text="not online",
-                                                background="black",
+                                                background="blue",
                                                 foreground="white")
                 self.notonline_label.pack()
             if self.userlabel is not None:
