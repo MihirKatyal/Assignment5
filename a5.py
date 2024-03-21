@@ -2,7 +2,6 @@
 #mkatyal@uci.edu
 #19099879
 
-
 from fileinput import filename
 from pathlib import Path
 import json
@@ -14,15 +13,27 @@ class Profile:
         self.username = username
         self.password = password
         self.bio = bio
+        self.messages = []  # Stores messages
+        self.recipients = []  # Stores recipients
+        self.filename = filename  # Path to the DSU file
 
-    def save(self, filename):
+    def save_profile(self):
         data = {
             'username': self.username,
             'password': self.password,
-            'bio': self.bio
+            'bio': self.bio,
+            'messages': self.messages,
+            'recipients': self.recipients
         }
-        with open(filename, 'w') as file:
+        with open(self.filename, 'w') as file:
             json.dump(data, file, indent=4)
+
+    def add_message(self, message):
+        self.messages.append(message)
+    
+    def add_recipient(self, recipient):
+        if recipient not in self.recipients:
+            self.recipients.append(recipient)
 
 def create_profile(directory, name):
     print("Creating a new profile...")
@@ -38,15 +49,17 @@ def create_profile(directory, name):
     except DsuFileError as e:
         print(f"Failed to save profile: {e}")
 
-def load_profile(filename):
+def load_profile(self):
     try:
-        profile = Profile()
-        profile.load(filename)
-        print(f"Loaded profile from {filename}")
-        return profile
-    except (DsuFileError, DsuProfileError) as e:
-        print(f"Failed to load profile: {e}")
-        return None
+        with open(self.filename, 'r') as file:
+            data = json.load(file)
+            self.username = data.get('username', '')
+            self.password = data.get('password', '')
+            self.bio = data.get('bio', '')
+            self.messages = data.get('messages', [])
+            self.recipients = data.get('recipients', [])
+    except FileNotFoundError:
+        print("Profile file not found.")
     
 def edit_profile(profile, args):
     for i in range(1, len(args), 2):
