@@ -29,3 +29,23 @@ class DirectMessenger:
         response = pip._vendor.requests.post(f'http://{self.dsuserver}/send', data=json_message)
         data = extract_msg(response.text)
         return data.type == 'ok'
+
+    def retrieve_new(self) -> list:
+        # Retrieve new messages
+        return self._retrieve_messages('new')
+
+    def retrieve_all(self) -> list:
+        # Retrieve all messages
+        return self._retrieve_messages('all')
+
+    def _retrieve_messages(self, msg_type: str) -> list:
+        # Retrieve messages helper function
+        if self.token is None:
+            if not self.authenticate():
+                return []
+        json_request = directmessage_request(self.token, msg_type)
+        response = pip._vendor.requests.post(f'http://{self.dsuserver}/retrieve', data=json_request)
+        data = extract_msg(response.text)
+        if data.type == 'ok':
+            return [DirectMessage(msg.from_user, msg.message, msg.timestamp) for msg in data.messages]
+        return []
