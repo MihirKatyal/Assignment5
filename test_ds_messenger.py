@@ -5,7 +5,7 @@ from ds_messenger import DirectMessenger
 DSUSERVER = "168.235.86.101"
 TEST_USERNAME = "f21demo"
 TEST_PASSWORD = "pwd123"
-RECIPIENT_USERNAME = "recipient_username"  # Replace with a real username
+RECIPIENT_USERNAME = "recipient_username"  
 
 def test_send_message(messenger):
     print("Testing Sending Message...")

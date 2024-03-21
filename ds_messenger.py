@@ -1,6 +1,7 @@
 import time
 from ds_protocol import join, directmessage_send, directmessage_request, extract_msg
 import pip._vendor.requests 
+import json
 
 class DirectMessage:
     def __init__(self, recipient=None, message=None, timestamp=None):
@@ -16,9 +17,22 @@ class DirectMessenger:
         self.token = None # the token will be set after you have successfully joined the server
 
     def authenticate(self):
-        # Authenticate with the server
-        response = pip._vendor.requests.post(f'http://{self.dsuserver}/join', data=join(self.username, self.password))
-        self.token = response.json()['token']
+        try:
+            response = pip._vendor.requests.post(f'http://{self.dsuserver}/join', json={"username": self.username, "password": self.password})
+            if response.status_code == 200:
+                response_json = response.json()
+                if 'token' in response_json:
+                    self.token = response_json['token']
+                    return True
+                else:
+                    print("Authentication failed: 'token' not in response")
+            else:
+                print(f"Authentication failed with status code {response.status_code}: {response.text}")
+        except pip._vendor.requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
+        except json.JSONDecodeError:
+            print(f"Failed to decode JSON from response: {response.text}")
+        return False
 
     def send(self, message: str, recipient: str) -> bool:
         # Send a message
