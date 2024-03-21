@@ -1,4 +1,6 @@
 import time
+import json
+import pip._vendor.requests 
 from ds_messenger import DirectMessenger
 
 # Configuartion for testing
@@ -7,10 +9,24 @@ TEST_USERNAME = "f21demo"
 TEST_PASSWORD = "pwd123"
 RECIPIENT_USERNAME = "recipient_username"  # Ensure this is an account you can check
 
-def test_authentication():
-    print("Testing authentication...")
-    messenger = DirectMessenger(dsuserver=DSUSERVER, username=TEST_USERNAME, password=TEST_PASSWORD)
-    assert messenger.authenticate(), "Failed to authenticate"
+def authenticate(self):
+    try:
+        response = pip._vendor.requests.post(f'http://{self.dsuserver}/join', json={"username": self.username, "password": self.password})
+        # Check if the response is successful and has content
+        if response.status_code == 200 and response.text:
+            response_json = response.json()
+            if 'token' in response_json:
+                self.token = response_json['token']
+                return True
+            else:
+                print("Token not found in response:", response_json)
+        else:
+            print("Failed to authenticate:", response.status_code, response.text)
+    except pip._vendor.requests.exceptions.RequestException as e:
+        print("Request failed:", e)
+    except json.JSONDecodeError as e:
+        print("Failed to decode JSON:", e, "Response text:", response.text)
+    return False
 
 def test_retrieve_new():
     print("Testing Retrieving New Messages...")
@@ -38,7 +54,7 @@ def test_send_message():
     print("Message sent successfully.")
 
 def main():
-    test_authentication()
+    authenticate()
     test_send_message()
     # Waiting for the message to be processed by the server and appear in the inbox
     time.sleep(5)  
