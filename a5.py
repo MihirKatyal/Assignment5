@@ -169,20 +169,32 @@ def main():
         if choice == 'c':
             directory = input("Enter the directory where the file should be created: ")
             name = input("What is the name of the new DSU file? ")
-            ui.create_profile(directory, name)
+            ui.create_profile(directory, name)  # Assumes this function now uses ExtendedProfile internally
             current_filename = Path(directory) / f"{name}.dsu"
         elif choice == 'l':
             filename = input("Enter the full path to the DSU file you would like to load: ")
-            current_profile = ui.load_profile(Path(filename))
+            current_profile = ui.load_profile(Path(filename))  # Make sure this function can handle ExtendedProfile
             current_filename = Path(filename)
         elif choice == 'p' and current_profile:
-            ui.publish_post(current_profile)
+            ui.publish_post(current_profile)  # Assumes this adds a post to the profile and saves
         elif choice == 'u' and current_profile:
-            ui.update_bio(current_profile)
+            ui.update_bio(current_profile)  # Assumes this updates the bio in the profile and saves
         elif choice == 'v' and current_profile:
-            ui.view_profile_info(current_profile)
+            ui.view_profile_info(current_profile)  # View basic profile info; consider extending to show messages/recipients
+        elif choice == 'm' and current_profile:
+            # Add functionality to add a message
+            message = input("Enter message: ")
+            current_profile.add_message({"content": message, "timestamp": "example-timestamp"})  # Adjust structure as needed
+            current_profile.save_profile()
+            print("Message added.")
+        elif choice == 'r' and current_profile:
+            # Add functionality to add a recipient
+            recipient = input("Enter recipient username: ")
+            current_profile.add_recipient(recipient)
+            current_profile.save_profile()
+            print("Recipient added.")
         elif choice == 'admin':
-            ui.admin_mode(current_profile)
+            ui.admin_mode(current_profile)  # Any admin-specific functionalities
         elif choice == 'q':
             break
         else:
