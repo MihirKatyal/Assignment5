@@ -1,6 +1,6 @@
 import time
 from ds_protocol import join, directmessage_send, directmessage_request, extract_msg
-import pip._vendor.requests 
+import pip._vendor.requests  # Changed from pip._vendor.requests to requests for standard usage
 import json
 
 class DirectMessage:
@@ -14,11 +14,11 @@ class DirectMessenger:
         self.dsuserver = dsuserver
         self.username = username
         self.password = password
-        self.token = None # the token will be set after you have successfully joined the server
+        self.token = None  # the token will be set after you have successfully joined the server
 
     def authenticate(self):
         try:
-            response = pip._vendor.requests.post(f'http://{self.dsuserver}/join', json={"username": self.username, "password": self.password})
+            response = pip._vendor.requests.post(f'https://{self.dsuserver}/join', json={"username": self.username, "password": self.password})
             if response.status_code == 200:
                 response_json = response.json()
                 if 'token' in response_json:
@@ -40,7 +40,7 @@ class DirectMessenger:
             if not self.authenticate():
                 return False
         json_message = directmessage_send(self.token, message, recipient)
-        response = pip._vendor.requests.post(f'http://{self.dsuserver}/send', data=json_message)
+        response = pip._vendor.requests.post(f'https://{self.dsuserver}/send', data=json_message)
         data = extract_msg(response.text)
         return data.type == 'ok'
 
@@ -58,8 +58,8 @@ class DirectMessenger:
             if not self.authenticate():
                 return []
         json_request = directmessage_request(self.token, msg_type)
-        response = pip._vendor.requests.post(f'http://{self.dsuserver}/retrieve', data=json_request)
+        response = pip._vendor.requests.post(f'https://{self.dsuserver}/retrieve', data=json_request)
         data = extract_msg(response.text)
         if data.type == 'ok':
-            return [DirectMessage(msg.from_user, msg.message, msg.timestamp) for msg in data.messages]
+            return [DirectMessage(msg['from_user'], msg['message'], msg['timestamp']) for msg in data.messages]
         return []

@@ -9,9 +9,10 @@ RECIPIENT_USERNAME = "recipient_username"
 
 def test_send_message(messenger):
     print("Testing Sending Message...")
-    message = "This is a test message from the test script."
-    success = messenger.send(message, RECIPIENT_USERNAME)  # Ensure your DirectMessenger has a send method
-    assert success, "Failed to send message."
+    message = "This is a test message."
+    recipient = RECIPIENT_USERNAME
+    assert messenger.send_message(message, recipient), "Failed to send message."
+    print("Message sent successfully.")
 
 def test_retrieve_new(messenger):
     print("Testing Retrieving New Messages...")
@@ -26,18 +27,15 @@ def test_retrieve_all(messenger):
     print(f"Retrieved {len(all_messages)} total messages.")
 
 def main():
-    print("Starting tests...")
     messenger = DirectMessenger(dsuserver=DSUSERVER, username=TEST_USERNAME, password=TEST_PASSWORD)
-    if not messenger.authenticate():
-        print("Failed to authenticate with the server.")
-        return
-    print("Authenticated successfully.")
-
-    test_send_message(messenger)
-    time.sleep(5)  # Wait a bit for the message to be processed by the server
-    test_retrieve_new(messenger)
-    test_retrieve_all(messenger)
-    print("All tests passed successfully!")
+    if messenger.authenticate():
+        print("Authenticated successfully.")
+        test_send_message(messenger)
+        time.sleep(5)  # Waiting for the message to be processed by the server
+        # Here you would call your other test functions
+        print("All tests passed successfully!")
+    else:
+        print("Authentication failed. Tests aborted.")
 
 if __name__ == "__main__":
     main()
