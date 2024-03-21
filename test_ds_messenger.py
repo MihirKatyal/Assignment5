@@ -44,22 +44,23 @@ def test_retrieve_all():
     assert isinstance(all_messages, list), "Failed to retrieve all messages as a list."
     print(f"Retrieved {len(all_messages)} total messages.")
 
-def test_send_message():
+def test_send_message(messenger):
     print("Testing Sending Message...")
-    messenger = DirectMessenger(dsuserver=DSUSERVER, username=TEST_USERNAME, password=TEST_PASSWORD)
-    assert messenger.authenticate(), "Pre-Test Authentication failed."
     message = "This is a test message."
     recipient = RECIPIENT_USERNAME
     assert messenger.send_message(message, recipient), "Failed to send message."
     print("Message sent successfully.")
 
 def main():
-    authenticate()
-    test_send_message()
-    # Waiting for the message to be processed by the server and appear in the inbox
-    time.sleep(5)  
-    test_retrieve_new()
-    test_retrieve_all()
+    # Creating an instance of DirectMessenger
+    messenger = DirectMessenger(dsuserver=DSUSERVER, username=TEST_USERNAME, password=TEST_PASSWORD)
+    # Calling authenticate on the instance
+    assert messenger.authenticate(), "Failed to authenticate"
+
+    test_send_message(messenger)  # Pass the authenticated messenger instance
+    time.sleep(5)  # Waiting for the message to be processed by the server
+    test_retrieve_new(messenger)
+    test_retrieve_all(messenger)
     print("All tests passed successfully!")
 
 if __name__ == "__main__":
