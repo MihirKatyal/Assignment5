@@ -1,3 +1,7 @@
+#Mihir Katyal
+#mkatyal@uci.edu
+#19099879
+
 import pathlib
 import tkinter as tk
 from tkinter import ttk, filedialog
@@ -544,9 +548,9 @@ class MainApp(tk.Frame):
         style.theme_use("classic")
         style.configure("Treeview", background="blue",
                         fieldbackground="green", foreground="white")
-        self.body.set_text_entry("To begin, add a contact by "
+        self.body.set_text_entry("To begin, you will have to add a contact by "
                                  "clicking settings, "
-                                 "or create\nand open a "
+                                 "or create\open a "
                                  "profile by clicking file.")
 
 

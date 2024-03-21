@@ -1,6 +1,10 @@
+#Mihir Katyal
+#mkatyal@uci.edu
+#19099879
+
 from ds_messenger import DirectMessenger, DirectMessage
 
-# Assuming these credentials are valid for your test server
+
 TEST_SERVER = '168.235.86.101'  
 TEST_PORT = 3021                
 TEST_USERNAME = 'f21demo'     
